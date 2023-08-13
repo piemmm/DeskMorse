@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.prowl.deskmorse.fx.DeskMorseController">
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/20.0.1" fx:controller="org.prowl.deskmorse.fx.DeskMorseController">
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
+   <children>
+       <MenuBar fx:id="menuBar" useSystemMenuBar="true" VBox.vgrow="NEVER">
+           <menus>
+               <Menu mnemonicParsing="false" text="File">
+                   <items>
+                       <MenuItem fx:id="preferencesMenuItem" mnemonicParsing="false" onAction="#onPreferencesAction" text="Preferences…" />
+                       <SeparatorMenuItem mnemonicParsing="false" />
+                       <MenuItem mnemonicParsing="false" onAction="#onQuitAction" text="Quit" />
+                   </items>
+               </Menu>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+               <Menu mnemonicParsing="false" text="Help">
+                   <items>
+                       <MenuItem mnemonicParsing="false" text="About KISSet" />
+                   </items>
+               </Menu>
+           </menus>
+       </MenuBar>
+       <ScrollPane fx:id="theScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER">
+
+           <StackPane fx:id="terminalStack" prefHeight="1200" prefWidth="700" />
+
+       </ScrollPane>
+      <HBox prefHeight="100.0" prefWidth="200.0" />
+   </children>
 </VBox>
