@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.prowl</groupId>
+    <artifactId>deskmorse</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>DeskMorse</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>5.9.2</junit.version>
+        <app.name>DeskMorse</app.name>
+        <app.version>0.0.1</app.version>
+        <jvm.modules>javafx.media,javafx.controls,javafx.fxml,java.sql,java.logging,javafx.web,javafx.swing,java.prefs
+        </jvm.modules>
+        <maven.compiler.source>18</maven.compiler.source>
+        <maven.compiler.target>18</maven.compiler.target>
+        <!-- Replace this UUID with a custom one for your project. This ID is used by the Windows installer system
+        to know that an installer is intended to replace/upgrade an earlier version. The easiest thing to do is
+        grab a unique UUID via https://www.uuidgenerator.net -->
+        <windows.upgrade.uuid>753a8628-a223-432f-b0fc-d95d30239721</windows.upgrade.uuid>
+        <!-- This is used to set many user-visible fields in the Windows Installer. See windows-jpackage.txt -->
+        <windows.vendor>Ian_Hawkins_G0TAI</windows.vendor>
+        <!-- Empty properties to skip signing by default. Set with the macos-sign Maven profile -->
+        <macos.sign></macos.sign>
+        <macos.sign.identity></macos.sign.identity>
+        <main-class>org.prowl.deskmorse.DeskMorse</main-class>
+
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!--        These are required for the menu and theme stuff.-->
+        <dependency>
+            <groupId>io.github.g00fy2</groupId>
+            <artifactId>versioncompare</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Dansoftowner</groupId>
+            <artifactId>jSystemThemeDetector</artifactId>
+            <version>3.8</version>
+        </dependency>
+        <dependency>
+            <groupId>de.jangassen</groupId>
+            <artifactId>nsmenufx</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+        <!--        Logging support-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.4</version>
+        </dependency>
+
+        <!-- Modern JavaFX Look and Feel -->
+        <!-- https://github.com/mkpaz/atlantafx -->
+        <dependency>
+            <groupId>io.github.mkpaz</groupId>
+            <artifactId>atlantafx-base</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
+
+        <!-- Guava, mainly for the caching and event bus -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>32.1.2-jre</version>
+        </dependency>
+
+
+
+
+
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>org.jfree.fxgraphics2d</artifactId>
+            <version>2.1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>18.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>18.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>11.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-javafx</artifactId>
+            <version>12.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.synedra</groupId>
+            <artifactId>validatorfx</artifactId>
+            <version>0.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Commons configuration (for XML'ing configuration files) -->
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.10</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Use the latest commons logging -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <!-- Bean utils (required by commons above) -->
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <extensions>
+            <!-- Used to inject the OS and architecture values in a consistent manner -->
+            <!-- https://github.com/trustin/os-maven-plugin -->
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.7.0</version>
+            </extension>
+        </extensions>
+        <resources>
+            <resource>
+                <!-- Here we are processing the platform-specific jpackage command files, adding in Maven
+                 properties for configuration. -->
+                <directory>${project.basedir}/src/packaging</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/packaging</targetPath>
+            </resource>
+            <!-- Add the default resource path back in - by overriding above it disables the default -->
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/src/main/resources/build-info/</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <!-- Install the terminal library because maven made it difficult for no good reason. -->
+            <!--                <plugin>-->
+            <!--                    <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                    <artifactId>maven-compiler-plugin</artifactId>-->
+            <!--                    <version>3.11.0</version>-->
+            <!--                    <configuration>-->
+            <!--                        <source>17</source>-->
+            <!--                        <target>17</target>-->
+            <!--                    </configuration>-->
+            <!--                </plugin>-->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <executions>
+                    <execution>
+                        <!-- Default configuration for running with: mvn clean javafx:run -->
+                        <id>default-cli</id>
+                        <configuration>
+                            <mainClass>org.prowl.kisset/org.prowl.kisset.KISSet</mainClass>
+                            <launcher>app</launcher>
+                            <jlinkZipName>app</jlinkZipName>
+                            <jlinkImageName>app</jlinkImageName>
+                            <noManPages>true</noManPages>
+                            <stripDebug>true</stripDebug>
+                            <noHeaderFiles>true</noHeaderFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <configuration>
+                    <!-- This is an app, so we don't want to install it in the local Maven repository -->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <!-- This copies the jar files declared by the Maven build into a single directory.
+                        This makes it easy to assemble the final installer package -->
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Include only compile stage dependencies (no test dependencies) -->
+                            <includeScope>compile</includeScope>
+                            <!-- The JavaFX libraries are bundled into the custom JVM, so we don't want to duplicate
+                            them in the bundled app and installer. This command skips all of the JavaFX by groupId. -->
+                            <excludeGroupIds>org.openjfx</excludeGroupIds>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Put the application jar generated by the project into the dependency folder - the default folder
+                for the maven-dependency-plugin output. -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/dependency</outputDirectory>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- Plugin to make working with JavaFX nicer. See https://github.com/openjfx/javafx-maven-plugin -->
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>${main-class}</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- https://github.com/wiverson/jtoolprovider-plugin -->
+                <groupId>io.github.wiverson</groupId>
+                <artifactId>jtoolprovider-plugin</artifactId>
+                <version>1.0.34</version>
+                <executions>
+                    <!-- This command runs jlink, generating a custom JVM by combining the JavaFX modules bundled in
+                    this project with the JDK modules. -->
+                    <execution>
+                        <id>jlink</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>java-tool</goal>
+                        </goals>
+                        <configuration>
+                            <toolName>jlink</toolName>
+                            <removeDirectories>${project.build.directory}/jvm-image/</removeDirectories>
+                            <addModules>${jvm.modules}</addModules>
+                            <output>${project.build.directory}/jvm-image</output>
+                            <args>
+                                <arg>--strip-native-commands</arg>
+                                <arg>--no-header-files</arg>
+                                <arg>--strip-debug</arg>
+                                <arg>--no-man-pages</arg>
+                                <arg>--compress=2</arg>
+                            </args>
+                        </configuration>
+                    </execution>
+                    <!-- The command that actually generates the installer. The options for each platform
+                    are found the /src/packaging directory. These files are copied into the target directory by
+                    the Maven resources plugin, which does the filtering to replace the original values with
+                    the actual Maven properties.
+
+                    https://github.com/wiverson/jtoolprovider-plugin/blob/main/java-tool-doc.md
+                    -->
+                    <execution>
+                        <id>jpackage</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>java-tool</goal>
+                        </goals>
+                        <configuration>
+                            <toolName>jpackage</toolName>
+                            <writeOutputToLog>true</writeOutputToLog>
+                            <writeErrorsToLog>true</writeErrorsToLog>
+                            <failOnError>true</failOnError>
+                            <removeDirectories>${project.build.directory}/installer-work</removeDirectories>
+                            <args>@${project.build.directory}/packaging/${os.detected.name}-jpackage.txt</args>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.10.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>3.1.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.1</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>4.0.0-M9</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M7</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+    <reporting>
+        <plugins>
+            <!-- Basic report generation. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.3.0</version>
+            </plugin>
+
+            <!-- http://mojo.codehaus.org/versions-maven-plugin/version-rules.html -->
+            <!-- This plugin is a utility to find outdated dependencies in your project. Just run mvn site and
+            the resulting HTML reports in target/site will let you know what plugins and dependencies are out of date.
+             -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.8.1</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependency-updates-report</report>
+                            <report>plugin-updates-report</report>
+                            <report>property-updates-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+                <configuration>
+                    <processDependencyManagementTransitive>false</processDependencyManagementTransitive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+    <profiles>
+        <profile>
+            <id>GitHub Run</id>
+            <activation>
+                <property>
+                    <name>env.GITHUB_ACTIONS</name>
+                </property>
+            </activation>
+            <properties>
+                <!--suppress UnresolvedMavenProperty -->
+                <app.version>1.1.${env.GITHUB_RUN_NUMBER}</app.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>Local Development Run</id>
+            <activation>
+                <property>
+                    <name>!env.GITHUB_ACTIONS</name>
+                </property>
+            </activation>
+            <properties>
+                <app.version>1.1.0</app.version>
+            </properties>
+        </profile>
+
+
+        <!-- We use the built-in Maven profile activation system to set the platform property.
+        These properties are then use to build the directory paths to the platform specific resources.
+        It would be great if Maven automatically added the os family as a property by default
+         -->
+
+        <profile>
+            <id>macos-sign</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <macos.sign>--mac-sign</macos.sign>
+                <!-- You will have to replace this with your own dev information from your Apple identity -->
+                <macos.sign.identity>--mac-signing-key-user-name "Ian Hawkins (7B7G365W57)"</macos.sign.identity>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>windows-active</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <!-- This adds a "launch on finish" to the Windows msi installer. This just tweaks the Windows
+                         installer package to run the executable after the installer runs, simplifying the user experience.
+                          If you don't want this behavior, just delete this plug execution. -->
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <phase>install</phase>
+                                <id>add-launch-to-msi</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>cscript</executable>
+                            <outputFile>${project.build.directory}/msi-result.log</outputFile>
+                            <workingDirectory>${project.build.directory}</workingDirectory>
+                            <arguments>
+                                <argument>${project.build.directory}/packaging/add-launch-to-msi.js</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
