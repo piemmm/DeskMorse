@@ -3,30 +3,44 @@ package org.prowl.deskmorse.fx;
 import de.jangassen.MenuToolkit;
 import de.jangassen.model.AppearanceMode;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.util.StringConverter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfree.fx.FXGraphics2D;
 import org.prowl.deskmorse.DeskMorse;
+import org.prowl.deskmorse.config.*;
+import org.prowl.deskmorse.generators.PracticeGenerator;
 import org.prowl.deskmorse.gui.terminal.Connection;
 import org.prowl.deskmorse.gui.terminal.Term;
 import org.prowl.deskmorse.gui.terminal.Terminal;
+import org.prowl.deskmorse.output.MorseOutput;
+import org.prowl.deskmorse.utils.PipedIOStream;
 import org.prowl.deskmorse.utils.Tools;
 
 import java.awt.*;
 import java.awt.desktop.AboutEvent;
 import java.awt.desktop.AboutHandler;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+import java.util.Locale;
 
 public class DeskMorseController {
+
+    private static final Log LOG = LogFactory.getLog("DeskMorseController");
+
 
     @FXML
     MenuBar menuBar;
@@ -36,11 +50,43 @@ public class DeskMorseController {
     ScrollPane theScrollPane;
     @FXML
     StackPane terminalStack;
+    @FXML
+    TextField sendTextField;
+    @FXML
+    TextField statusBox;
+    @FXML
+    Slider morseVolume;
+    @FXML
+    Slider handMorseSendingSkill;
+    @FXML
+    Slider morsePitch;
+    @FXML
+    Slider qrmGeneratorVolume;
+    @FXML
+    Spinner speedWPM;
+    @FXML
+    Spinner noGroups;
+    @FXML
+    Spinner groupLength;
+    @FXML
+    Button startButton;
+    @FXML
+    Button stopButton;
+    @FXML
+    Button mouseMorse;
+    @FXML
+    ChoiceBox sending;
+    @FXML
+    ChoiceBox codeType;
+    @FXML
+    ChoiceBox noiseGenerator;
+
 
     TerminalCanvas canvas;
+    private double volume = 1;
     private Terminal term;
-    private PipedInputStream inpis;
-    private PipedOutputStream outpos;
+    private PipedIOStream inpis;
+    private OutputStream inpos;
 
     @FXML
     protected void onQuitAction() {
@@ -56,8 +102,162 @@ public class DeskMorseController {
         //DeskMorse.INSTANCE.showPreferences();
     }
 
+    @FXML
+    protected void onMouseMorse(MouseEvent mouseEvent) {
+
+    }
+
+    @FXML
+    protected void onStartPressed() {
+        PracticeGenerator practiceGenerator = DeskMorse.INSTANCE.getPracticeGenerator();
+
+    }
+
+    @FXML
+    protected void onStopPressed() {
+
+    }
+
+
+    @FXML
+    protected void sendText() {
+        String text = sendTextField.getText().toUpperCase(Locale.ENGLISH);
+        sendTextField.clear();
+
+        Tools.runOnThread(() -> {
+            try {
+                MorseOutput morseOutput = DeskMorse.INSTANCE.getMorseOutput();
+                morseOutput.start();
+                for (char c : text.toCharArray()) {
+
+                    morseOutput.send("" + c, (float) speedWPMV, (int) morsePitchV, volume);
+                    write("" + c);
+                    flush();
+                }
+                write("\r\n");
+                morseOutput.stop();
+            } catch (Throwable e) {
+                LOG.error(e.getMessage(), e);
+            }
+        });
+
+    }
+
+
+    @FXML
+    protected void onVolumeChanged() {
+        volume = morseVolume.getValue() / 100;
+    }
+
+    private double handMorseSendingSkillV = 0;
+    private double morsePitchV = 0;
+    private double qrmGeneratorVolumeV = 0;
+    private double speedWPMV = 0;
+    private double noGroupsV = 0;
+    private double groupLengthV = 0;
+
+    @FXML
+    protected void onHandMorseSendingSkillChanged() {
+        handMorseSendingSkillV = handMorseSendingSkill.getValue();
+    }
+
+    @FXML
+    protected void onMorsePitchChanged() {
+        morsePitchV = morsePitch.getValue();
+    }
+
+    @FXML
+    protected void onQRMGeneratorVolumeChanged() {
+        qrmGeneratorVolumeV = qrmGeneratorVolume.getValue();
+    }
+
+    @FXML
+    protected void onSpeedWPMChanged() {
+        speedWPMV = (int) speedWPM.getValue();
+    }
+
+    @FXML
+    protected void onNoGroupsChanged() {
+        noGroupsV = (int) noGroups.getValue();
+    }
+
+    @FXML
+    protected void onGroupLengthChanged() {
+        groupLengthV = (int) groupLength.getValue();
+    }
+
 
     public void setup() {
+        morseVolume.valueProperty().addListener((observable, oldValue, newValue) -> onVolumeChanged());
+        handMorseSendingSkill.valueProperty().addListener((observable, oldValue, newValue) -> onHandMorseSendingSkillChanged());
+        morsePitch.valueProperty().addListener((observable, oldValue, newValue) -> onMorsePitchChanged());
+        qrmGeneratorVolume.valueProperty().addListener((observable, oldValue, newValue) -> onQRMGeneratorVolumeChanged());
+        speedWPM.valueProperty().addListener((observable, oldValue, newValue) -> onSpeedWPMChanged());
+        noGroups.valueProperty().addListener((observable, oldValue, newValue) -> onNoGroupsChanged());
+        groupLength.valueProperty().addListener((observable, oldValue, newValue) -> onGroupLengthChanged());
+
+        // load config
+        Config conf = DeskMorse.INSTANCE.getConfig();
+        morseVolume.setValue(conf.getConfig(Conf.drive, Conf.drive.doubleDefault()) * 100);
+        handMorseSendingSkill.setValue(conf.getConfig(Conf.handMorseSendingSkill, Conf.handMorseSendingSkill.doubleDefault()));
+        morsePitch.setValue(conf.getConfig(Conf.pitch, Conf.pitch.doubleDefault()));
+        qrmGeneratorVolume.setValue(conf.getConfig(Conf.qrmGeneratorVolume, Conf.qrmGeneratorVolume.doubleDefault()));
+        speedWPM.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, conf.getConfig(Conf.speed, Conf.speed.intDefault())));
+        noGroups.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, conf.getConfig(Conf.noGgroups, Conf.noGgroups.intDefault())));
+        groupLength.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, conf.getConfig(Conf.groupLength, Conf.groupLength.intDefault())));
+
+
+        sending.setItems(FXCollections.observableArrayList(SendingType.values()));
+        sending.setConverter(new StringConverter<SendingType>() {
+            @Override
+            public String toString(SendingType object) {
+                if (object == null) {
+                    return "";
+                }
+                return object.getName();
+            }
+
+            @Override
+            public SendingType fromString(String string) {
+                return SendingType.valueOf(string);
+            }
+        });
+        sending.getSelectionModel().select(SendingType.valueOf(conf.getConfig(Conf.sendingType, Conf.sendingType.stringDefault())));
+
+        codeType.setItems(FXCollections.observableArrayList(MorseCodeType.values()));
+        codeType.setConverter(new StringConverter<MorseCodeType>() {
+            @Override
+            public String toString(MorseCodeType object) {
+                if (object == null) {
+                    return "";
+                }
+                return object.getName();
+            }
+
+            @Override
+            public MorseCodeType fromString(String string) {
+                return MorseCodeType.valueOf(string);
+            }
+        });
+        codeType.getSelectionModel().select(MorseCodeType.valueOf(conf.getConfig(Conf.morseCodeType, Conf.morseCodeType.stringDefault())));
+
+        noiseGenerator.setItems(FXCollections.observableArrayList(NoiseGeneratorType.values()));
+        noiseGenerator.setConverter(new StringConverter<NoiseGeneratorType>() {
+            @Override
+            public String toString(NoiseGeneratorType object) {
+                if (object == null) {
+                    return "";
+                }
+                return object.getName();
+            }
+
+            @Override
+            public NoiseGeneratorType fromString(String string) {
+                return NoiseGeneratorType.valueOf(string);
+            }
+        });
+        noiseGenerator.getSelectionModel().select(NoiseGeneratorType.valueOf(conf.getConfig(Conf.noiseGeneratorType, Conf.noiseGeneratorType.stringDefault())));
+
         // SingleThreadBus.INSTANCE.register(this);
 
         // A little messing around with menubars for macos
@@ -104,14 +304,17 @@ public class DeskMorseController {
     public void configureTerminal() {
         terminalStack.getChildren().clear();
         term = new Terminal();
+        term.setDefaultBackGround(Color.BLUE.darker().darker().darker());
+        term.setBackGround(Color.BLUE.darker().darker().darker());
         term.setForeGround(Color.WHITE);
         float fontSize = 14;
         term.setFont("Monospaced", fontSize);
 
         canvas = new TerminalCanvas(term);
+        canvas.setHeight(412);
         terminalStack.getChildren().add(canvas);
 
-        canvas.setHeight(2280);
+        // canvas.setWidth(100);
         canvas.widthProperty().bind(terminalStack.widthProperty());
         Platform.runLater(() -> {
             canvas.heightProperty().bind(terminalStack.heightProperty());
@@ -125,20 +328,14 @@ public class DeskMorseController {
     }
 
     public void startTerminal() {
-        inpis = new PipedInputStream();
-        PipedOutputStream inpos = new PipedOutputStream();
-        PipedInputStream outpis = new PipedInputStream();
-        outpos = new PipedOutputStream();
 
-        try {
-            inpis.connect(inpos);
-            outpis.connect(outpos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        inpis = new PipedIOStream();
+        inpos = inpis.getOutputStream();
 
 
         Tools.runOnThread(() -> {
+            LOG.debug("Starting term");
             term.start(new Connection() {
                 @Override
                 public InputStream getInputStream() {
@@ -147,7 +344,7 @@ public class DeskMorseController {
 
                 @Override
                 public OutputStream getOutputStream() {
-                    return outpos;
+                    return null;
                 }
 
                 @Override
@@ -161,6 +358,43 @@ public class DeskMorseController {
                 }
             });
         });
+
+        Tools.runOnThread(() -> {
+
+            LOG.debug("Writing text to reader");
+            try {
+                Tools.delay(100);
+                for (int i = 0; i < 3; i++) {
+                    // Ansi code to move down 100 lines
+                    inpos.write("\u001b[100B".getBytes());
+                    inpos.flush();
+                }
+                for (int i = 0; i < 30; i++) {
+                    write("DeskMorse Terminal\r\n");
+                    inpos.flush();
+                }
+            } catch (Exception e) {
+                LOG.debug(e.getMessage(), e);
+            }
+        });
+    }
+
+
+    // Convenience write class
+    private void write(String s) {
+        try {
+            inpos.write(s.getBytes());
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
+    }
+
+    private void flush() {
+        try {
+            inpos.flush();
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
     }
 
     class TerminalCanvas extends Canvas {

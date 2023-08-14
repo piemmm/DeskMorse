@@ -22,6 +22,7 @@
 
 package org.prowl.deskmorse.gui.terminal;
 
+
 import java.io.InputStream;
 import java.io.OutputStream;
 

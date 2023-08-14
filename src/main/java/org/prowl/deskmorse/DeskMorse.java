@@ -20,6 +20,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.prowl.deskmorse.config.Config;
 import org.prowl.deskmorse.fx.DeskMorseController;
+import org.prowl.deskmorse.generators.PracticeGenerator;
+import org.prowl.deskmorse.output.MorseOutput;
+import org.prowl.deskmorse.output.sound.Sound;
 
 import java.awt.*;
 import java.awt.desktop.AboutEvent;
@@ -35,6 +38,10 @@ public class DeskMorse extends Application {
     private Config configuration;
     public static DeskMorse INSTANCE;
 
+    // The output media we will be sending morse with.
+    private MorseOutput morseOutput;
+
+    private PracticeGenerator practiceGenerator;
 
     public static void main(String[] args) {
         launch();
@@ -44,6 +51,13 @@ public class DeskMorse extends Application {
     public void init() throws Exception {
         super.init();
         INSTANCE = DeskMorse.this;
+
+
+        try {
+            morseOutput = new Sound();
+        } catch(Throwable e) {
+            LOG.error(e.getMessage());
+        }
         // Push debugging to a file if we are debugging a built app with no console
 //        try {
 //            File outputFile = File.createTempFile("debug", ".log", getFileSystemView().getDefaultDirectory());
@@ -80,6 +94,8 @@ public class DeskMorse extends Application {
                 Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
             }
 
+            configuration = new Config();
+
             // Init resource bundles.
             Messages.init();
 
@@ -93,7 +109,7 @@ public class DeskMorse extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(DeskMorse.class.getResource("fx/DeskMorseController.fxml"));
         Parent root = fxmlLoader.load();
         DeskMorseController controller = fxmlLoader.getController();
-        Scene scene = new Scene(root, 320, 240);
+        Scene scene = new Scene(root, 720, 440);
         stage.setTitle("DeskMorse");
         stage.setScene(scene);
         stage.show();
@@ -154,4 +170,15 @@ public class DeskMorse extends Application {
         System.exit(0);
     }
 
+    public MorseOutput getMorseOutput() {
+        return morseOutput;
+    }
+
+    public Config getConfig() {
+        return configuration;
+    }
+
+    public PracticeGenerator getPracticeGenerator() {
+        return practiceGenerator;
+    }
 }

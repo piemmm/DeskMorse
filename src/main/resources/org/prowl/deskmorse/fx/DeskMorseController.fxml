@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.ScrollPane?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/20.0.1" fx:controller="org.prowl.deskmorse.fx.DeskMorseController">
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.prowl.deskmorse.fx.DeskMorseController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -32,11 +41,181 @@
                </Menu>
            </menus>
        </MenuBar>
-       <ScrollPane fx:id="theScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER">
-
-           <StackPane fx:id="terminalStack" prefHeight="1200" prefWidth="700" />
-
-       </ScrollPane>
-      <HBox prefHeight="100.0" prefWidth="200.0" />
+      <ScrollPane fx:id="theScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="200.0" vbarPolicy="ALWAYS">
+         <content>
+      
+              <StackPane fx:id="terminalStack" style="-fx-background-color: darkblue;" />
+         </content>
+      </ScrollPane>
+      <HBox prefHeight="0.0" prefWidth="702.0">
+         <children>
+            <TextField fx:id="sendTextField" onAction="#sendText" prefHeight="25.0" prefWidth="495.0" promptText="Type text here then press &lt;Enter&gt; to send">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </TextField>
+            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="25.0" prefWidth="96.0" text="Status:" />
+            <TextField fx:id="statusBox" alignment="CENTER" editable="false" prefHeight="25.0" prefWidth="212.0" text="Idle">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </TextField>
+         </children>
+      </HBox>
+      <HBox prefHeight="118.0" prefWidth="702.0">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <GridPane prefHeight="207.0" prefWidth="175.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label minWidth="70.0" text="Speed(wpm):" GridPane.halignment="RIGHT" />
+                        <Label minWidth="70.0" text="No. Groups:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <Label minWidth="70.0" text="Group Length:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                        <Spinner fx:id="speedWPM" editable="true" minWidth="70.0" GridPane.columnIndex="1">
+                           <GridPane.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </GridPane.margin>
+                        </Spinner>
+                        <Spinner fx:id="noGroups" editable="true" minWidth="70.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </GridPane.margin>
+                        </Spinner>
+                        <Spinner fx:id="groupLength" editable="true" minWidth="70.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </GridPane.margin>
+                        </Spinner>
+                     </children>
+                  </GridPane>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" prefHeight="118.0" prefWidth="341.0" HBox.hgrow="ALWAYS">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <children>
+                  <GridPane prefHeight="141.0" prefWidth="416.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="131.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="313.0" minWidth="10.0" prefWidth="285.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label minWidth="70.0" text="Sending:" GridPane.halignment="RIGHT">
+                           <GridPane.margin>
+                              <Insets right="5.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <ChoiceBox fx:id="sending" minWidth="99.0" prefHeight="25.0" prefWidth="573.0" GridPane.columnIndex="1">
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                        </ChoiceBox>
+                        <Label minWidth="70.0" text="Morse code type:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets right="5.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <ChoiceBox fx:id="codeType" minWidth="99.0" prefHeight="25.0" prefWidth="633.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin></ChoiceBox>
+                        <Label text="Noise Generator:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                        <ChoiceBox fx:id="noiseGenerator" prefHeight="25.0" prefWidth="530.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                        </ChoiceBox>
+                     </children>
+                  </GridPane>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Button fx:id="startButton" minWidth="55.0" mnemonicParsing="false" onAction="#onStartPressed" prefWidth="1000.0" text="Start">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="stopButton" minWidth="55.0" mnemonicParsing="false" onAction="#onStopPressed" prefWidth="1000.0" text="Stop">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="mouseMorse" minWidth="55.0" mnemonicParsing="false" onMousePressed="#onMouseMorse" onMouseReleased="#onMouseMorse" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: lightblue;" text="Mouse Morse">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </VBox>
+         </children></HBox>
+      <HBox prefHeight="46.0" prefWidth="702.0">
+         <children>
+            <VBox alignment="CENTER" prefHeight="100.0" prefWidth="206.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Hand Morse Sending Skill" />
+                  <Slider fx:id="handMorseSendingSkill" max="1.0" showTickLabels="true" showTickMarks="true">
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                  </Slider>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Morse Volume" />
+                  <Slider fx:id="morseVolume" majorTickUnit="50.0" showTickLabels="true" showTickMarks="true">
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                  </Slider>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Morse Pitch" />
+                  <Slider fx:id="morsePitch" majorTickUnit="100.0" max="1000.0" min="400.0" minorTickCount="50" showTickLabels="true" showTickMarks="true">
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                  </Slider>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="100.0" prefWidth="183.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="QRM Generator Volume" />
+                  <Slider fx:id="qrmGeneratorVolume" showTickLabels="true" showTickMarks="true">
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                  </Slider>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
    </children>
 </VBox>

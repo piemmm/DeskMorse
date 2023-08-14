@@ -71,7 +71,7 @@ public class Terminal implements Term {
     public Terminal() {
 
 
-        setFont("Monospaced",6f);
+        setFont("Monospaced",12f);
 
        // setSize(getTermWidth(), getTermHeight(), true);
 

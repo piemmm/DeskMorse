@@ -22,10 +22,17 @@
 
 package org.prowl.deskmorse.gui.terminal;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 public abstract class Emulator {
+
+    private static final Log LOG = LogFactory.getLog("Emulator");
+
+
     private final byte[] b2 = new byte[2];
     private final byte[] b1 = new byte[1];
     protected int term_width = 80;
@@ -108,7 +115,7 @@ public abstract class Emulator {
     void fillBuf() throws IOException {
         buflen = bufs = 0;
         buflen = in.read(buf, bufs, buf.length - bufs);
-    /*
+        /*
     System.out.println("fillBuf: ");
     for(int i=0; i<buflen; i++){
     byte b=buf[i];

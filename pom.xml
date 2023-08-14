@@ -36,6 +36,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>clojars</id>
+            <url>https://clojars.org/repo/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -88,7 +92,12 @@
         </dependency>
 
 
-
+        <!-- https://mvnrepository.com/artifact/com.jsyn/jsyn -->
+        <dependency>
+            <groupId>com.jsyn</groupId>
+            <artifactId>jsyn</artifactId>
+            <version>20170815</version>
+        </dependency>
 
 
         <dependency>
@@ -147,6 +156,7 @@
             <artifactId>commons-logging</artifactId>
             <version>1.2</version>
         </dependency>
+
 
         <!-- Bean utils (required by commons above) -->
         <dependency>

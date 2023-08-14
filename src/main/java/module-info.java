@@ -19,6 +19,8 @@ module org.prowl.deskmorse {
     requires versioncompare;
     requires com.google.common;
     requires javafx.web;
+    requires jsyn;
+
     opens org.prowl.deskmorse to javafx.fxml;
     exports org.prowl.deskmorse;
     exports org.prowl.deskmorse.fx;

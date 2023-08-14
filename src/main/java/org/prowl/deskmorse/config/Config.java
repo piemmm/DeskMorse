@@ -23,7 +23,7 @@ public class Config {
 
     public File getConfigFile() {
         String userHome = System.getProperty("user.home");
-        File appDir = new File(userHome, ".kisset");
+        File appDir = new File(userHome, ".deskmorse");
         if (!appDir.exists()) {
             appDir.mkdirs();
         }
@@ -63,6 +63,11 @@ public class Config {
     public int getConfig(Conf name, int defaultVal) {
         return configuration.getInt(name.name(), defaultVal);
     }
+
+    public double getConfig(Conf name, double defaultVal) {
+        return configuration.getDouble(name.name(), defaultVal);
+    }
+
 
     public boolean getConfig(Conf name, boolean defaultValue) {
         return configuration.getBoolean(name.name(), defaultValue);

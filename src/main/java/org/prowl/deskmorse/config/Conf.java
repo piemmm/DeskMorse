@@ -8,7 +8,17 @@ import org.prowl.deskmorse.DeskMorse;
 public enum Conf {
 
     // Enum list of configuration variables with their defaults
-    callsign("");
+    callsign(""),
+    speed("12"),
+    pitch("800"),
+    drive("0.5"),
+    handMorseSendingSkill("0.9"),
+    qrmGeneratorVolume("0.5"),
+    noGgroups("5"),
+    groupLength("5"),
+    sendingType(SendingType.RandomLetters.name()),
+    morseCodeType(MorseCodeType.Farnsworth.name()),
+    noiseGeneratorType(NoiseGeneratorType.QRMandQSB.name());
 
     public Object defaultSetting;
 
@@ -28,6 +38,9 @@ public enum Conf {
         return Boolean.parseBoolean(String.valueOf(defaultSetting));
     }
 
+    public double doubleDefault() {
+        return Double.parseDouble(String.valueOf(defaultSetting));
+    }
 
 
 }
