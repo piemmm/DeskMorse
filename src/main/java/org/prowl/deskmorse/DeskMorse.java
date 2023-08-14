@@ -58,6 +58,9 @@ public class DeskMorse extends Application {
         } catch(Throwable e) {
             LOG.error(e.getMessage());
         }
+
+        practiceGenerator = new PracticeGenerator();
+
         // Push debugging to a file if we are debugging a built app with no console
 //        try {
 //            File outputFile = File.createTempFile("debug", ".log", getFileSystemView().getDefaultDirectory());

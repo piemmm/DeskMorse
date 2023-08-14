@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.jfree.fx.FXGraphics2D;
 import org.prowl.deskmorse.DeskMorse;
 import org.prowl.deskmorse.config.*;
+import org.prowl.deskmorse.generators.Practice;
 import org.prowl.deskmorse.generators.PracticeGenerator;
 import org.prowl.deskmorse.gui.terminal.Connection;
 import org.prowl.deskmorse.gui.terminal.Term;
@@ -87,6 +88,8 @@ public class DeskMorseController {
     private Terminal term;
     private PipedIOStream inpis;
     private OutputStream inpos;
+    private boolean stopMorse = false;
+
 
     @FXML
     protected void onQuitAction() {
@@ -110,12 +113,20 @@ public class DeskMorseController {
     @FXML
     protected void onStartPressed() {
         PracticeGenerator practiceGenerator = DeskMorse.INSTANCE.getPracticeGenerator();
+        SendingType sendingType = SendingType.valueOf(sending.getValue().toString());
+        NoiseGeneratorType noiseGeneratorType = NoiseGeneratorType.valueOf(noiseGenerator.getValue().toString());
+        MorseCodeType morseCodeType = MorseCodeType.valueOf(codeType.getValue().toString());
+        int speed = (int) speedWPM.getValue();
+        Practice practice = practiceGenerator.generatePractice(sendingType, noiseGeneratorType, morseCodeType,  (int)noGroups.getValue(),  (int)groupLength.getValue(),  speed);
 
+        // Practice must build itself.
+        practice.generate();
+        doMorse(practice.getText());
     }
 
     @FXML
     protected void onStopPressed() {
-
+        stopMorse = true;
     }
 
 
@@ -124,22 +135,8 @@ public class DeskMorseController {
         String text = sendTextField.getText().toUpperCase(Locale.ENGLISH);
         sendTextField.clear();
 
-        Tools.runOnThread(() -> {
-            try {
-                MorseOutput morseOutput = DeskMorse.INSTANCE.getMorseOutput();
-                morseOutput.start();
-                for (char c : text.toCharArray()) {
 
-                    morseOutput.send("" + c, (float) speedWPMV, (int) morsePitchV, volume);
-                    write("" + c);
-                    flush();
-                }
-                write("\r\n");
-                morseOutput.stop();
-            } catch (Throwable e) {
-                LOG.error(e.getMessage(), e);
-            }
-        });
+        doMorse(text);
 
     }
 
@@ -186,6 +183,34 @@ public class DeskMorseController {
         groupLengthV = (int) groupLength.getValue();
     }
 
+    public void doMorse(String text) {
+        stopMorse = false;
+        startButton.setDisable(true);
+        stopButton.setDisable(false);
+        Tools.runOnThread(() -> {
+            try {
+                MorseOutput morseOutput = DeskMorse.INSTANCE.getMorseOutput();
+                morseOutput.start();
+                for (char c : text.toCharArray()) {
+
+                    morseOutput.send("" + c, (float) speedWPMV, (int) morsePitchV, volume);
+                    write("" + c);
+                    flush();
+                    if (stopMorse) {
+                        break;
+                    }
+                }
+                write("\r\n");
+                morseOutput.stop();
+            } catch (Throwable e) {
+                LOG.error(e.getMessage(), e);
+            }
+            Platform.runLater(() -> {
+                stopButton.setDisable(true);
+                startButton.setDisable(false);
+            });
+        });
+    }
 
     public void setup() {
         morseVolume.valueProperty().addListener((observable, oldValue, newValue) -> onVolumeChanged());
