@@ -27,7 +27,7 @@ public class Sound extends MorseOutput {
             sdl = AudioSystem.getSourceDataLine(af);
             waitBufferAvailable = sdl.getBufferSize();
             if (waitBufferAvailable > 1000) {
-                waitBufferAvailable = waitBufferAvailable - 50;
+                waitBufferAvailable = waitBufferAvailable - 150;
             }
             LOG.debug("Wait buffer location is: " + waitBufferAvailable);
             sdl.open(af);
