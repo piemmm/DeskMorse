@@ -2,6 +2,7 @@ package org.prowl.deskmorse.output.sound;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.prowl.deskmorse.config.MorseCodeType;
 import org.prowl.deskmorse.output.MorseOutput;
 import org.prowl.deskmorse.utils.Morse;
 
@@ -39,7 +40,7 @@ public class Sound extends MorseOutput {
     public void start() {
         super.start();
         tone(800, 900, 0.0f);
-      //  sdl.start();
+        //  sdl.start();
     }
 
     public void waitForSent() {
@@ -47,8 +48,8 @@ public class Sound extends MorseOutput {
     }
 
     public void stop() {
-      //  sdl.drain();
-      //  sdl.stop();
+        //  sdl.drain();
+        //  sdl.stop();
         tone(800, 900, 0.0f);
         super.stop();
     }
@@ -74,17 +75,35 @@ public class Sound extends MorseOutput {
             sdl.write(buf, 0, 1);
         }
 
-      //  sdl.getBufferSize()
+        //  sdl.getBufferSize()
     }
 
     @Override
-    public void send(String text, float speed, int pitch, double volume) {
+    public void send(String text, float speed, int pitch, double volume, MorseCodeType type, double typeValue) {
 
-        double dit = 1000d / speed;
+        // Default is farnsworth code.
+        double dit = 2400d / speed;
         double dah = dit * 3d;
         double symSpace = dit;
         double wordSpace = 7d * dit;
         double letterSpace = 3d * dit;
+
+        if (type.equals(MorseCodeType.Computer)) {
+            dah = dit * 3d;
+            symSpace = dit;
+            wordSpace = 6d * dit;
+            letterSpace = 2.5d * dit;
+
+
+        } else if (type.equals(MorseCodeType.Hand)) {
+            dah = dit * 3d;
+            dit = dit * 0.9d; // dits slightly shorter
+            symSpace = dit;
+            wordSpace = 6d * dit;
+            letterSpace = 2.5d * dit;
+        }
+
+
         sdl.start();
         // Go though each character and generate the dits and dahs
         for (char c : text.toCharArray()) {
@@ -92,6 +111,15 @@ public class Sound extends MorseOutput {
             String code = morse.getMorse();
             tone(pitch, letterSpace, 0.0f);
             for (char m : code.toCharArray()) {
+
+                if (type.equals(MorseCodeType.Hand)) {
+                    dit = (1000d / speed) * ((Math.random() * typeValue)+(1-(typeValue/2)));
+                    dah = dit * 3d;
+                    symSpace = dit;
+                    wordSpace = 6d * dit;
+                    letterSpace = 2.5d * dit;
+                }
+
                 if (m == '-') {
                     tone(pitch, dah, volume);
                 } else if (m == '.') {

@@ -182,7 +182,7 @@
             <VBox alignment="CENTER" prefHeight="100.0" prefWidth="206.0" HBox.hgrow="ALWAYS">
                <children>
                   <Label text="Hand Morse Sending Skill" />
-                  <Slider fx:id="handMorseSendingSkill" blockIncrement="0.1" majorTickUnit="1.0" max="1.0" minorTickCount="10" showTickLabels="true" showTickMarks="true">
+                  <Slider fx:id="handMorseSendingSkill" blockIncrement="0.1" majorTickUnit="1.0" max="1.0" min="0.5" minorTickCount="10" showTickLabels="true" showTickMarks="true">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" />
                      </VBox.margin>

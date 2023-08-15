@@ -158,14 +158,12 @@ public class Decoder {
 
             //
              if (toneCount < dit / 2.2 && toneCount > 80 && plock > 0.2 && lastDar > dit * 20) {
-            //if ((toneCount < dit / 2.2 || lastDar > dit * 20) && toneCount > 80 && plock > 0.2) {
                 if (p > 0.4) {
                     if (toneCount > dit) {
                         dit = dit + ((toneCount) / 10);
                     } else if (toneCount < dit) {
                         dit = dit - ((toneCount) / 10);
                     }
-                    System.out.println("dit:" + dit);
                 }
             }
         }

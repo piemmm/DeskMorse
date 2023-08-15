@@ -81,7 +81,7 @@ public class DeskMorseController implements DecodeListener {
     @FXML
     ChoiceBox sending;
     @FXML
-    ChoiceBox codeType;
+    ChoiceBox<MorseCodeType> codeType;
     @FXML
     ChoiceBox noiseGenerator;
 
@@ -223,7 +223,7 @@ public class DeskMorseController implements DecodeListener {
                 morseOutput.start();
                 for (char c : text.toCharArray()) {
 
-                    morseOutput.send("" + c, (float) speedWPMV, (int) morsePitchV, volume);
+                    morseOutput.send("" + c, (float) speedWPMV, (int) morsePitchV, volume, codeType.getValue(), handMorseSendingSkillV);
                     write("" + c);
                     flush();
                     if (stopMorse) {
@@ -313,6 +313,24 @@ public class DeskMorseController implements DecodeListener {
             }
         });
         noiseGenerator.getSelectionModel().select(NoiseGeneratorType.valueOf(conf.getConfig(Conf.noiseGeneratorType, Conf.noiseGeneratorType.stringDefault())));
+
+        handMorseSendingSkill.setLabelFormatter(new StringConverter<Double>() {
+            @Override
+            public String toString(Double object) {
+                if (object == 0.5) {
+                    return "Bad";
+                } else if (object ==1 ) {
+                    return "Good";
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public Double fromString(String string) {
+                return Double.parseDouble(string);
+            }
+        });
 
         // SingleThreadBus.INSTANCE.register(this);
 

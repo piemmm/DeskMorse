@@ -3,8 +3,8 @@ package org.prowl.deskmorse.config;
 public enum MorseCodeType {
 
     Farnsworth("Farnsworth"),
-    Koch("Koch"),
-    Traditional("Traditional");
+    Hand("Hand"),
+    Computer("Computer");
 
     private String name;
 

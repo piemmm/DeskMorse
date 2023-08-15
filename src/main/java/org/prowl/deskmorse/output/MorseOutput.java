@@ -1,5 +1,7 @@
 package org.prowl.deskmorse.output;
 
+import org.prowl.deskmorse.config.MorseCodeType;
+
 import java.util.concurrent.Semaphore;
 
 public abstract class MorseOutput {
@@ -12,7 +14,7 @@ public abstract class MorseOutput {
      * @param text The morse code string to send.
      * @param drive The amount of drive on the signal (for audio, this is the volume).
      */
-    public abstract void send(String text, float speed, int pitch, double drive);
+    public abstract void send(String text, float speed, int pitch, double drive, MorseCodeType type, double typeValue);
 
     /**
      * Claim (and start) the output device
