@@ -18,7 +18,7 @@ public enum Conf {
     groupLength("5"),
     sendingType(SendingType.RandomLetters.name()),
     morseCodeType(MorseCodeType.Farnsworth.name()),
-    noiseGeneratorType(NoiseGeneratorType.QRMandQSB.name());
+    noiseGeneratorType(NoiseGeneratorType.None.name());
 
     public Object defaultSetting;
 

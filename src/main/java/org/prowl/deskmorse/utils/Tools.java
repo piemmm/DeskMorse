@@ -1,6 +1,7 @@
 package org.prowl.deskmorse.utils;
 
 
+import com.google.common.io.Files;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -9,6 +10,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -146,6 +149,32 @@ public class Tools {
             LOG.error(e.getMessage(), e);
             return null;
         }
+    }
+
+    /**
+     * Unpack a file from resources to the user's home directory in our app space, because javas useless media tools
+     * can't handle working out what a file is when it lives in a jar file.
+     */
+    public static void unpackFile(Class cl,String filename) {
+        try {
+
+            File file = new File(getAppDir(), filename);
+            if (file.exists()) {
+                return;
+            }
+            Files.write(cl.getResourceAsStream(filename).readAllBytes(), file);
+        } catch(Throwable e) {
+            LOG.error(e.getMessage(),e);
+        }
+    }
+
+    public static File getAppDir() {
+        String userHome = System.getProperty("user.home");
+        File appDir = new File(userHome, ".deskmorse");
+        if (!appDir.exists()) {
+            appDir.mkdir();
+        }
+        return appDir;
     }
 
 }

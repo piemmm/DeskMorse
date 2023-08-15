@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaView;
 import javafx.util.StringConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,9 +30,11 @@ import org.prowl.deskmorse.gui.terminal.Terminal;
 import org.prowl.deskmorse.input.DecodeListener;
 import org.prowl.deskmorse.input.mousemorse.MouseInput;
 import org.prowl.deskmorse.output.MorseOutput;
+import org.prowl.deskmorse.output.sound.QRM;
 import org.prowl.deskmorse.utils.PipedIOStream;
 import org.prowl.deskmorse.utils.Tools;
 
+import javax.print.attribute.standard.Media;
 import java.awt.*;
 import java.awt.desktop.AboutEvent;
 import java.awt.desktop.AboutHandler;
@@ -83,7 +86,9 @@ public class DeskMorseController implements DecodeListener {
     @FXML
     ChoiceBox<MorseCodeType> codeType;
     @FXML
-    ChoiceBox noiseGenerator;
+    ChoiceBox<NoiseGeneratorType> noiseGenerator;
+    @FXML
+    MediaView mediaView;
 
 
     TerminalCanvas canvas;
@@ -218,6 +223,10 @@ public class DeskMorseController implements DecodeListener {
         stopButton.setDisable(false);
         statusBox.setText("Sending...");
         Tools.runOnThread(() -> {
+
+            QRM qrm = new QRM(noiseGenerator.getValue().getSource(), mediaView);
+            qrm.start();
+
             try {
                 MorseOutput morseOutput = DeskMorse.INSTANCE.getMorseOutput();
                 morseOutput.start();
@@ -235,6 +244,7 @@ public class DeskMorseController implements DecodeListener {
             } catch (Throwable e) {
                 LOG.error(e.getMessage(), e);
             }
+            qrm.stop();
             Platform.runLater(() -> {
                 statusBox.setText("Waiting...");
                 stopButton.setDisable(true);

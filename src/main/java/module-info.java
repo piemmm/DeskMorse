@@ -20,6 +20,7 @@ module org.prowl.deskmorse {
     requires com.google.common;
     requires javafx.web;
     requires jsyn;
+    requires javafx.media;
 
     opens org.prowl.deskmorse to javafx.fxml;
     exports org.prowl.deskmorse;

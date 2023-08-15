@@ -15,11 +15,13 @@ import javafx.stage.WindowEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.prowl.deskmorse.config.Config;
+import org.prowl.deskmorse.config.NoiseGeneratorType;
 import org.prowl.deskmorse.fx.DeskMorseController;
 import org.prowl.deskmorse.generators.PracticeGenerator;
 import org.prowl.deskmorse.input.Decoder;
 import org.prowl.deskmorse.output.MorseOutput;
 import org.prowl.deskmorse.output.sound.Sound;
+import org.prowl.deskmorse.utils.Tools;
 
 import java.awt.*;
 import java.awt.desktop.AppReopenedEvent;
@@ -46,6 +48,10 @@ public class DeskMorse extends Application {
     public void init() throws Exception {
         super.init();
         INSTANCE = DeskMorse.this;
+
+        Tools.runOnThread(() -> {
+            NoiseGeneratorType.unpack();
+        });
 
         try {
             morseOutput = new Sound();
