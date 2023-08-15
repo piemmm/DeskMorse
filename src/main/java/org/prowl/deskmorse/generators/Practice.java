@@ -210,11 +210,14 @@ public class Practice {
 
         StringBuilder sb = new StringBuilder();
 
+        String source = generateITUCallsign();
+        String destination = generateITUCallsign();
         // Generate a callsign
-        sb.append(generateITUCallsign());
+        sb.append(source);
         sb.append(" DE ");
-        sb.append(generateITUCallsign());
+        sb.append(destination);
         sb.append(" ");
+        sb.append(generateComment());
 
         // Now add about something or exchange something like the WX(weather), QTH(location), rig details, etc
         int info = 0;
@@ -236,6 +239,8 @@ public class Practice {
                 info++;
             }
 
+            sb.append(generateHandover(source, destination));
+
         }
 
         // Now send text that emulates handing back to other station or send 73's for a final
@@ -246,6 +251,29 @@ public class Practice {
         return sb.toString().trim();
 
 
+    }
+
+    public String generateComment() {
+        StringBuilder sb = new StringBuilder();
+        if (Math.random() > 0.5) {
+            sb.append(chooseRandom(" QSB ", " QRM ", " QRN ", " QSB ES QRM ", " QSB ES QRN ", " QRM ES QRN ", " QSB QRM ", " QSB QRN ", " QRM QRN "));
+        }
+        return sb.toString();
+    }
+
+    public String generateHandover(String source, String destination) {
+        StringBuilder sb = new StringBuilder();
+        if (Math.random() < 0.5) {
+            sb.append(" HW");
+            sb.append(chooseRandom(" CPY?"," CP"));
+        }
+
+        if (Math.random() < 0.5) {
+            sb.append(source);
+        }
+        sb.append(" DE ");
+        sb.append(destination);
+    return sb.toString();
     }
 
     public String generateWX() {
