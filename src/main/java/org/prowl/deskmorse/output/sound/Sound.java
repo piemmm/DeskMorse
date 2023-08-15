@@ -14,8 +14,8 @@ public class Sound extends MorseOutput {
     private static final Log LOG = LogFactory.getLog("Sound");
 
 
-    public static float SAMPLE_RATE = 16000f;
-    public static final byte[] buf = new byte[1];
+    public static float SAMPLE_RATE = 44100f;
+    public static final byte[] buf = new byte[2];
     private int waitBufferAvailable;
 
     private SourceDataLine sdl;
@@ -23,7 +23,7 @@ public class Sound extends MorseOutput {
     public Sound() {
         try {
             byte[] buf = new byte[1];
-            AudioFormat af = new AudioFormat(SAMPLE_RATE, 8, 1, true, false);
+            AudioFormat af = new AudioFormat(SAMPLE_RATE, 16, 1, true, false);
             sdl = AudioSystem.getSourceDataLine(af);
             waitBufferAvailable = sdl.getBufferSize();
             if (waitBufferAvailable > 1000) {
@@ -71,8 +71,10 @@ public class Sound extends MorseOutput {
                 vol = (vol - decrease);
             }
             double angle = i / (SAMPLE_RATE / hz) * 2.0 * Math.PI;
-            buf[0] = (byte) (Math.sin(angle) * 127.0 * vol);
-            sdl.write(buf, 0, 1);
+            int sample = (int) (Math.sin(angle) * 32767.0 * vol);
+            buf[0] = (byte) (sample & 0xff);
+            buf[1] = (byte) ((sample >> 8) & 0xff);
+            sdl.write(buf, 0, 2);
         }
 
         //  sdl.getBufferSize()
