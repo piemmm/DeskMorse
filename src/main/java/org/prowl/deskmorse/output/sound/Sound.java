@@ -84,7 +84,7 @@ public class Sound extends MorseOutput {
     public void send(String text, float speed, int pitch, double volume, MorseCodeType type, double typeValue) {
 
         // Default is farnsworth code.
-        double dit = 2400d / speed;
+        double dit = 6400d / speed;
         double dah = dit * 3d;
         double symSpace = dit;
         double wordSpace = 7d * dit;
@@ -115,7 +115,7 @@ public class Sound extends MorseOutput {
             for (char m : code.toCharArray()) {
 
                 if (type.equals(MorseCodeType.Hand)) {
-                    dit = (1000d / speed) * ((Math.random() * typeValue)+(1-(typeValue/2)));
+                    dit = (6400d / speed) * ((Math.random() * typeValue)+(1-(typeValue/2)));
                     dah = dit * 3d;
                     symSpace = dit;
                     wordSpace = 6d * dit;
