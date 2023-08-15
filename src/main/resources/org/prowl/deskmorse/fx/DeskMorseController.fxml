@@ -20,10 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
 
-<VBox alignment="TOP_CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.prowl.deskmorse.fx.DeskMorseController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
+<VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.prowl.deskmorse.fx.DeskMorseController">
    <children>
        <MenuBar fx:id="menuBar" useSystemMenuBar="true" VBox.vgrow="NEVER">
            <menus>
@@ -41,12 +38,18 @@
                    </items>
                </Menu>
            </menus>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
        </MenuBar>
       <ScrollPane fx:id="theScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="200.0" vbarPolicy="ALWAYS">
          <content>
       
-              <StackPane fx:id="terminalStack" style="-fx-background-color: darkblue;" />
+              <StackPane fx:id="terminalStack" prefHeight="130.0" style="-fx-background-color: darkblue;" />
          </content>
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
       </ScrollPane>
       <HBox prefHeight="0.0" prefWidth="702.0">
          <children>
@@ -62,6 +65,9 @@
                </HBox.margin>
             </TextField>
          </children>
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
       </HBox>
       <HBox prefHeight="118.0" prefWidth="702.0">
          <children>
@@ -177,7 +183,10 @@
                   <Insets left="10.0" />
                </HBox.margin>
             </VBox>
-         </children></HBox>
+         </children>
+         <VBox.margin>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </VBox.margin></HBox>
       <HBox prefHeight="46.0" prefWidth="702.0">
          <children>
             <VBox alignment="CENTER" prefHeight="100.0" prefWidth="206.0" HBox.hgrow="ALWAYS">
@@ -221,6 +230,9 @@
                </children>
             </VBox>
          </children>
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" top="5.0" />
+         </VBox.margin>
       </HBox>
       <MediaView fx:id="mediaView" opacity="0.01" visible="false" VBox.vgrow="NEVER" />
    </children>
