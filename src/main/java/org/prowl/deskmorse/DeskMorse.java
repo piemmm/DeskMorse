@@ -3,16 +3,12 @@ package org.prowl.deskmorse;
 import atlantafx.base.theme.PrimerDark;
 import atlantafx.base.theme.PrimerLight;
 import com.jthemedetecor.OsThemeDetector;
-import de.jangassen.MenuToolkit;
-import de.jangassen.model.AppearanceMode;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -21,12 +17,11 @@ import org.apache.commons.logging.LogFactory;
 import org.prowl.deskmorse.config.Config;
 import org.prowl.deskmorse.fx.DeskMorseController;
 import org.prowl.deskmorse.generators.PracticeGenerator;
+import org.prowl.deskmorse.input.Decoder;
 import org.prowl.deskmorse.output.MorseOutput;
 import org.prowl.deskmorse.output.sound.Sound;
 
 import java.awt.*;
-import java.awt.desktop.AboutEvent;
-import java.awt.desktop.AboutHandler;
 import java.awt.desktop.AppReopenedEvent;
 import java.awt.desktop.AppReopenedListener;
 import java.io.IOException;
@@ -40,7 +35,7 @@ public class DeskMorse extends Application {
 
     // The output media we will be sending morse with.
     private MorseOutput morseOutput;
-
+    private Decoder decoder;
     private PracticeGenerator practiceGenerator;
 
     public static void main(String[] args) {
@@ -52,18 +47,20 @@ public class DeskMorse extends Application {
         super.init();
         INSTANCE = DeskMorse.this;
 
-
         try {
             morseOutput = new Sound();
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             LOG.error(e.getMessage());
         }
 
         practiceGenerator = new PracticeGenerator();
 
+        decoder = new Decoder();
+        decoder.start();
+
         // Push debugging to a file if we are debugging a built app with no console
 //        try {
-//            File outputFile = File.createTempFile("debug", ".log", getFileSystemView().getDefaultDirectory());
+//            File outputFile = File.createTempFile("debug", ".log", FileSystemView.getFileSystemView().getDefaultDirectory());
 //            PrintStream output = new PrintStream(new BufferedOutputStream(new FileOutputStream(outputFile)), true);
 //            System.setOut(output);
 //            System.setErr(output);
@@ -183,5 +180,9 @@ public class DeskMorse extends Application {
 
     public PracticeGenerator getPracticeGenerator() {
         return practiceGenerator;
+    }
+
+    public Decoder getDecoder() {
+        return decoder;
     }
 }

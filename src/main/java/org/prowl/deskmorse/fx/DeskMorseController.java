@@ -26,6 +26,8 @@ import org.prowl.deskmorse.generators.PracticeGenerator;
 import org.prowl.deskmorse.gui.terminal.Connection;
 import org.prowl.deskmorse.gui.terminal.Term;
 import org.prowl.deskmorse.gui.terminal.Terminal;
+import org.prowl.deskmorse.input.DecodeListener;
+import org.prowl.deskmorse.input.mousemorse.MouseInput;
 import org.prowl.deskmorse.output.MorseOutput;
 import org.prowl.deskmorse.utils.PipedIOStream;
 import org.prowl.deskmorse.utils.Tools;
@@ -37,8 +39,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
+import java.util.Timer;
 
-public class DeskMorseController {
+public class DeskMorseController implements DecodeListener {
 
     private static final Log LOG = LogFactory.getLog("DeskMorseController");
 
@@ -89,7 +92,7 @@ public class DeskMorseController {
     private PipedIOStream inpis;
     private OutputStream inpos;
     private boolean stopMorse = false;
-
+    private MouseInput mouseInput = new MouseInput();
 
     @FXML
     protected void onQuitAction() {
@@ -108,6 +111,32 @@ public class DeskMorseController {
     @FXML
     protected void onMouseMorse(MouseEvent mouseEvent) {
 
+        // If the mouse has entered
+        if (mouseEvent.getEventType() == MouseEvent.MOUSE_ENTERED) {
+            // Start the mouse input
+            mouseInput.start();
+        } else if (mouseEvent.getEventType() == MouseEvent.MOUSE_EXITED) {
+            // Stop the mouse input
+            mouseInput.stop();
+        }
+
+        // If the mouse has been pressed
+        if (mouseEvent.getEventType() == MouseEvent.MOUSE_PRESSED) {
+            // Feed the mouse input
+            mouseInput.feed(true);
+        } else if (mouseEvent.getEventType() == MouseEvent.MOUSE_RELEASED) {
+            // Feed the mouse input
+            mouseInput.feed(false);
+        }
+    }
+
+    /**
+     * More decodes appear here from the mousemorse button
+     * @param s
+     */
+    @Override
+    public void decoded(String s) {
+       write(s);
     }
 
     @FXML
@@ -187,6 +216,7 @@ public class DeskMorseController {
         stopMorse = false;
         startButton.setDisable(true);
         stopButton.setDisable(false);
+        statusBox.setText("Sending...");
         Tools.runOnThread(() -> {
             try {
                 MorseOutput morseOutput = DeskMorse.INSTANCE.getMorseOutput();
@@ -206,6 +236,7 @@ public class DeskMorseController {
                 LOG.error(e.getMessage(), e);
             }
             Platform.runLater(() -> {
+                statusBox.setText("Waiting...");
                 stopButton.setDisable(true);
                 startButton.setDisable(false);
             });
@@ -324,6 +355,8 @@ public class DeskMorseController {
 
         configureTerminal();
         startTerminal();
+
+        DeskMorse.INSTANCE.getDecoder().setDecodeListener(this);
     }
 
     public void configureTerminal() {
