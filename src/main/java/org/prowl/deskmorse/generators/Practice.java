@@ -82,6 +82,8 @@ public class Practice {
         } else if (sendingType == SendingType.QSO) {
             text = generateQSO();
         }
+
+        text = text.replace("  "," ").trim();
     }
 
 
@@ -239,11 +241,10 @@ public class Practice {
                 info++;
             }
 
-            sb.append(generateHandover(source, destination));
 
         }
-
         // Now send text that emulates handing back to other station or send 73's for a final
+        sb.append(generateHandover(source, destination));
 
 
 
@@ -264,8 +265,8 @@ public class Practice {
     public String generateHandover(String source, String destination) {
         StringBuilder sb = new StringBuilder();
         if (Math.random() < 0.5) {
-            sb.append(" HW");
-            sb.append(chooseRandom(" CPY?"," CP"));
+            sb.append(" HW ");
+            sb.append(chooseRandom(" CPY? "," CP "));
         }
 
         if (Math.random() < 0.5) {
@@ -278,8 +279,8 @@ public class Practice {
 
     public String generateWX() {
         StringBuilder sb = new StringBuilder();
-        sb.append("WX ");
-        sb.append("IS ");
+        sb.append(" WX ");
+        sb.append(" IS ");
         String weather = chooseRandom("WINDY","CLOUDY","SUNNY","OVERCAST","RAINING","SNOWING","WARM","COLD","FREEZING","HOT","DRY","HUMID","WET","STORMY","THUNDERSTORMS","FOGGY","HAZE","SMOG","SMOKE","DUST","SANDSTORM","ICE","SLEET","HAIL","FROST","MIST","DRIZZLE","SHOWERS","DOWNPOUR","DOWNFALL");
         sb.append(weather+" ");
         // Sometimes weather is repeated twice
@@ -291,29 +292,27 @@ public class Practice {
 
     public String generateRIG() {
         StringBuilder builder = new StringBuilder();
-        builder.append("RIG ");
-        builder.append("IS ");
-        builder.append("A ");
+        builder.append(" RIG ");
+        builder.append(" IS ");
+        builder.append(" A ");
         String rig = chooseRandom("ICOM","KENWOOD","YAESU","BAOFENG","ALINCO","ELECRAFT","TEN-TEC","ELAD","FLEXRADIO","ANAN","SUNSDR","SPE EXPERT","RM ITALY","RM KL");
         builder.append(rig+" ");
         if (Math.random() < 0.5) {
             builder.append(rig + " ");
         }
-        builder.append(" ");
         return builder.toString();
     }
 
     public String generateQTH() {
         StringBuilder builder = new StringBuilder();
-        builder.append("QTH ");
-        builder.append("IS ");
-        builder.append("A ");
+        builder.append(" QTH ");
+        builder.append(" IS ");
+        builder.append(" A ");
         String qth = chooseRandom("CITY","TOWN","VILLAGE","HAMLET","FARM","HOUSE","COTTAGE","FLAT","APARTMENT","BUNGALOW","CABIN","CAMP","CARAVAN","CHALET","CONDO","DUPLEX","ESTATE","LODGE","MANSION","MANSIONETTE","MANOR","MILL","PENTHOUSE","RANCH","RESORT","RETREAT","SEMI","SHACK","STUDIO","TERRACE","VILLA","YURT");
         builder.append(qth+" ");
         if (Math.random() < 0.5) {
             builder.append(qth + " ");
         }
-        builder.append(" ");
         return builder.toString();
     }
 
