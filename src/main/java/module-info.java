@@ -20,9 +20,6 @@ module org.prowl.deskmorse {
     requires versioncompare;
     requires com.google.common;
     requires javafx.web;
-    requires jlayer;
-    requires mp3spi;
-    requires tritonus.share;
 
 
     opens org.prowl.deskmorse to javafx.fxml;

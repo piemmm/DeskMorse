@@ -14,7 +14,7 @@
         <junit.version>5.10.0</junit.version>
         <app.name>DeskMorse</app.name>
         <app.version>0.0.1</app.version>
-        <jvm.modules>javafx.media,javafx.controls,javafx.fxml,java.sql,java.logging,javafx.web,javafx.swing,java.prefs,mp3spi,jlayer,tritonus.share</jvm.modules>
+        <jvm.modules>javafx.media,javafx.controls,javafx.fxml,java.sql,java.logging,javafx.web,javafx.swing,java.prefs</jvm.modules>
         <maven.compiler.source>18</maven.compiler.source>
         <maven.compiler.target>18</maven.compiler.target>
         <!-- Replace this UUID with a custom one for your project. This ID is used by the Windows installer system
@@ -42,22 +42,6 @@
     </repositories>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.googlecode.soundlibs</groupId>
-            <artifactId>tritonus-share</artifactId>
-            <version>0.3.7.4</version>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.soundlibs</groupId>
-            <artifactId>mp3spi</artifactId>
-            <version>1.9.5.4</version>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.soundlibs</groupId>
-            <artifactId>vorbisspi</artifactId>
-            <version>1.0.3-2</version>
-        </dependency>
 
         <!--        These are required for the menu and theme stuff.-->
         <dependency>
