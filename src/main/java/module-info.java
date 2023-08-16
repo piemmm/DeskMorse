@@ -1,10 +1,11 @@
 module org.prowl.deskmorse {
-    requires javafx.controls;
+    //requires javafx.controls;
     requires javafx.fxml;
 
-    requires org.controlsfx.controls;
-    requires net.synedra.validatorfx;
-    requires org.kordamp.ikonli.javafx;
+    requires javafx.media;
+    //requires org.controlsfx.controls;
+    //requires net.synedra.validatorfx;
+    //requires org.kordamp.ikonli.javafx;
     requires org.jfree.fxgraphics2d;
     requires javafx.swing;
     requires java.logging;
@@ -19,8 +20,10 @@ module org.prowl.deskmorse {
     requires versioncompare;
     requires com.google.common;
     requires javafx.web;
-    requires jsyn;
-    requires javafx.media;
+    requires jlayer;
+    requires mp3spi;
+    requires tritonus.share;
+
 
     opens org.prowl.deskmorse to javafx.fxml;
     exports org.prowl.deskmorse;

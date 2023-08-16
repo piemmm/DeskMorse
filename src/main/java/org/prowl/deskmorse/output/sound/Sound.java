@@ -29,7 +29,6 @@ public class Sound extends MorseOutput {
             if (waitBufferAvailable > 1000) {
                 waitBufferAvailable = waitBufferAvailable - 150;
             }
-            LOG.debug("Wait buffer location is: " + waitBufferAvailable);
             sdl.open(af);
             //    sdl.start();
         } catch (Throwable e) {

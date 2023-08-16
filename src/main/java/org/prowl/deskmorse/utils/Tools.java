@@ -2,6 +2,7 @@ package org.prowl.deskmorse.utils;
 
 
 import com.google.common.io.Files;
+import javafx.scene.control.Alert;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -176,5 +177,7 @@ public class Tools {
         }
         return appDir;
     }
+
+
 
 }

@@ -18,7 +18,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.media.MediaView?>
 
 <VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.prowl.deskmorse.fx.DeskMorseController">
    <children>
@@ -234,6 +233,5 @@
             <Insets left="10.0" right="10.0" top="5.0" />
          </VBox.margin>
       </HBox>
-      <MediaView fx:id="mediaView" opacity="0.01" visible="false" VBox.vgrow="NEVER" />
    </children>
 </VBox>

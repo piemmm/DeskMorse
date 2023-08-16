@@ -15,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.MediaView;
 import javafx.util.StringConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,7 +33,6 @@ import org.prowl.deskmorse.output.sound.QRM;
 import org.prowl.deskmorse.utils.PipedIOStream;
 import org.prowl.deskmorse.utils.Tools;
 
-import javax.print.attribute.standard.Media;
 import java.awt.*;
 import java.awt.desktop.AboutEvent;
 import java.awt.desktop.AboutHandler;
@@ -42,7 +40,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
-import java.util.Timer;
 
 public class DeskMorseController implements DecodeListener {
 
@@ -87,9 +84,6 @@ public class DeskMorseController implements DecodeListener {
     ChoiceBox<MorseCodeType> codeType;
     @FXML
     ChoiceBox<NoiseGeneratorType> noiseGenerator;
-    @FXML
-    MediaView mediaView;
-
 
     TerminalCanvas canvas;
     private double volume = 1;
@@ -98,10 +92,13 @@ public class DeskMorseController implements DecodeListener {
     private OutputStream inpos;
     private boolean stopMorse = false;
     private MouseInput mouseInput = new MouseInput();
+    private QRM qrmGenerator = new QRM();
+
 
     @FXML
     protected void onQuitAction() {
-        // Ask the user if they really want to quit?
+        // Save the config
+        DeskMorse.INSTANCE.getConfig().saveConfig();
 
         // Quit the application
         DeskMorse.INSTANCE.quit();
@@ -137,11 +134,12 @@ public class DeskMorseController implements DecodeListener {
 
     /**
      * More decodes appear here from the mousemorse button
+     *
      * @param s
      */
     @Override
     public void decoded(String s) {
-       write(s);
+        write(s);
     }
 
     @FXML
@@ -151,7 +149,7 @@ public class DeskMorseController implements DecodeListener {
         NoiseGeneratorType noiseGeneratorType = NoiseGeneratorType.valueOf(noiseGenerator.getValue().toString());
         MorseCodeType morseCodeType = MorseCodeType.valueOf(codeType.getValue().toString());
         int speed = (int) speedWPM.getValue();
-        Practice practice = practiceGenerator.generatePractice(sendingType, noiseGeneratorType, morseCodeType,  (int)noGroups.getValue(),  (int)groupLength.getValue(),  speed);
+        Practice practice = practiceGenerator.generatePractice(sendingType, noiseGeneratorType, morseCodeType, (int) noGroups.getValue(), (int) groupLength.getValue(), speed);
 
         // Practice must build itself.
         practice.generate();
@@ -161,6 +159,7 @@ public class DeskMorseController implements DecodeListener {
     @FXML
     protected void onStopPressed() {
         stopMorse = true;
+        stopButton.setDisable(true);
     }
 
 
@@ -177,7 +176,7 @@ public class DeskMorseController implements DecodeListener {
 
     @FXML
     protected void onVolumeChanged() {
-        volume = morseVolume.getValue() / 100;
+        volume = morseVolume.getValue() / 100d;
     }
 
     private double handMorseSendingSkillV = 0;
@@ -199,7 +198,8 @@ public class DeskMorseController implements DecodeListener {
 
     @FXML
     protected void onQRMGeneratorVolumeChanged() {
-        qrmGeneratorVolumeV = qrmGeneratorVolume.getValue();
+        double vol = qrmGeneratorVolume.getValue() / 100d;
+        qrmGenerator.setVolume(vol);
     }
 
     @FXML
@@ -224,8 +224,8 @@ public class DeskMorseController implements DecodeListener {
         statusBox.setText("Sending...");
         Tools.runOnThread(() -> {
 
-            QRM qrm = new QRM(noiseGenerator.getValue().getSource(), mediaView);
-            qrm.start();
+            qrmGenerator.setSource(noiseGenerator.getValue().getSource());
+            qrmGenerator.start();
 
             try {
                 MorseOutput morseOutput = DeskMorse.INSTANCE.getMorseOutput();
@@ -241,10 +241,17 @@ public class DeskMorseController implements DecodeListener {
                 }
                 write("\r\n");
                 morseOutput.stop();
+                if (qrmGenerator.isRunning()) {
+                    Platform.runLater(() -> {
+                        statusBox.setText("Finishing...");
+                    });
+                    Tools.delay(3000);
+                }
+
             } catch (Throwable e) {
                 LOG.error(e.getMessage(), e);
             }
-            qrm.stop();
+            qrmGenerator.stop();
             Platform.runLater(() -> {
                 statusBox.setText("Waiting...");
                 stopButton.setDisable(true);
@@ -267,7 +274,7 @@ public class DeskMorseController implements DecodeListener {
         morseVolume.setValue(conf.getConfig(Conf.drive, Conf.drive.doubleDefault()) * 100);
         handMorseSendingSkill.setValue(conf.getConfig(Conf.handMorseSendingSkill, Conf.handMorseSendingSkill.doubleDefault()));
         morsePitch.setValue(conf.getConfig(Conf.pitch, Conf.pitch.doubleDefault()));
-        qrmGeneratorVolume.setValue(conf.getConfig(Conf.qrmGeneratorVolume, Conf.qrmGeneratorVolume.doubleDefault()));
+        qrmGeneratorVolume.setValue(conf.getConfig(Conf.qrmGeneratorVolume, Conf.qrmGeneratorVolume.doubleDefault()) * 100);
         speedWPM.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, conf.getConfig(Conf.speed, Conf.speed.intDefault())));
         noGroups.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, conf.getConfig(Conf.noGgroups, Conf.noGgroups.intDefault())));
         groupLength.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, conf.getConfig(Conf.groupLength, Conf.groupLength.intDefault())));
@@ -329,7 +336,7 @@ public class DeskMorseController implements DecodeListener {
             public String toString(Double object) {
                 if (object == 0.5) {
                     return "Bad";
-                } else if (object ==1 ) {
+                } else if (object == 1) {
                     return "Good";
                 } else {
                     return "";

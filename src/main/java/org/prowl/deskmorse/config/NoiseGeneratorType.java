@@ -36,12 +36,12 @@ public enum NoiseGeneratorType {
         return null;
     }
 
-    public static void unpack() {
-        for (NoiseGeneratorType type : NoiseGeneratorType.values()) {
-            if (type.getSource() != null && type.getSource() instanceof String) {
-                Tools.unpackFile(QRM.class, (String)type.getSource());
-            }
-        }
-
-    }
+//    public static void unpack() {
+//        for (NoiseGeneratorType type : NoiseGeneratorType.values()) {
+//            if (type.getSource() != null && type.getSource() instanceof String) {
+//                Tools.unpackFile(QRM.class, (String)type.getSource());
+//            }
+//        }
+//
+//    }
 }

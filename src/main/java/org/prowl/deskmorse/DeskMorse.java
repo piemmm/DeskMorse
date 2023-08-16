@@ -49,10 +49,6 @@ public class DeskMorse extends Application {
         super.init();
         INSTANCE = DeskMorse.this;
 
-        Tools.runOnThread(() -> {
-            NoiseGeneratorType.unpack();
-        });
-
         try {
             morseOutput = new Sound();
         } catch (Throwable e) {
