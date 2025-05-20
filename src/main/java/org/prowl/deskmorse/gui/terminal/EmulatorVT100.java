@@ -512,7 +512,7 @@ public class EmulatorVT100 extends Emulator {
                     }
 
                     LOG.debug("unknown " + Integer.toHexString(b & 0xff) + " "
-                            + new Character((char) b) + ", " + intarg[0] + ", " + intarg[1] + ", "
+                            + Character.valueOf((char) b) + ", " + intarg[0] + ", " + intarg[1] + ", "
                             + intarg[2] + ",intargi=" + intargi);
                     continue;
                 }
