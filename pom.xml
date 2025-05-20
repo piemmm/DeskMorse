@@ -15,8 +15,8 @@
         <app.name>DeskMorse</app.name>
         <app.version>0.0.1</app.version>
         <jvm.modules>javafx.media,javafx.controls,javafx.fxml,java.sql,java.logging,javafx.web,javafx.swing,java.prefs</jvm.modules>
-        <maven.compiler.source>18</maven.compiler.source>
-        <maven.compiler.target>18</maven.compiler.target>
+        <maven.compiler.source>24</maven.compiler.source>
+        <maven.compiler.target>24</maven.compiler.target>
         <!-- Replace this UUID with a custom one for your project. This ID is used by the Windows installer system
         to know that an installer is intended to replace/upgrade an earlier version. The easiest thing to do is
         grab a unique UUID via https://www.uuidgenerator.net -->
@@ -347,6 +347,7 @@
                             <writeErrorsToLog>true</writeErrorsToLog>
                             <failOnError>true</failOnError>
                             <removeDirectories>${project.build.directory}/installer-work</removeDirectories>
+                            <!--suppress UnresolvedMavenProperty -->
                             <args>@${project.build.directory}/packaging/${os.detected.name}-jpackage.txt</args>
                         </configuration>
                     </execution>
@@ -425,7 +426,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.4.5</version>
+                <version>3.6.2</version>
             </plugin>
 
             <!-- http://mojo.codehaus.org/versions-maven-plugin/version-rules.html -->
@@ -435,7 +436,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.16.0</version>
+                <version>2.17.1</version>
                 <reportSets>
                     <reportSet>
                         <reports>
